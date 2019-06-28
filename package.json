@@ -1,0 +1,25 @@
+{
+  "name": "nodex-cli",
+  "version": "1.0.0",
+  "description": "the commond line tools for nodex-libs",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chqilin/nodex-cli.git"
+  },
+  "keywords": [
+    "nodex-libs"
+  ],
+  "author": "Cheelin Cheng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chqilin/nodex-cli/issues"
+  },
+  "homepage": "https://github.com/chqilin/nodex-cli#readme",
+  "dependencies": {
+    "nodex-libs": "^1.2.13"
+  }
+}
