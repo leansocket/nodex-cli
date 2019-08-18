@@ -1,2 +1,2 @@
 # nodex-generator
-generate nodex-libs project.
+Nodex-libs' application generator.
