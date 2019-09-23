@@ -1,2 +1,2 @@
-# nodex-generator
-Nodex-libs' application generator.
+# nodex-cli
+Nodex-libs' command line.
