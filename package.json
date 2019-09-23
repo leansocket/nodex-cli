@@ -8,19 +8,25 @@
     "commander": "^3.0.1",
     "fs-extra": "^8.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OracleRubyRose/nodex-generator.git"
+    "url": "git+https://github.com/OracleRubyRose/nodex-cli.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "nodex-cli",
+    "nodex-generator",
+    "nodex-libs"
+  ],
+  "author": "Ruby Rose",
+  "license": "MIT License",
   "bugs": {
-    "url": "https://github.com/OracleRubyRose/nodex-generator/issues"
+    "url": "https://github.com/OracleRubyRose/nodex-cli/issues"
   },
-  "homepage": "https://github.com/OracleRubyRose/nodex-generator#readme"
+  "homepage": "https://github.com/OracleRubyRose/nodex-cli#readme"
 }
