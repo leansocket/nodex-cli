@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+
+const program = require('commander')
+const chalk = require('chalk')
+const path = require('path')
+const logger = require('../lib/logger')
+const fs = require('fs-extra')
+const TEMPLATE_DIR = path.join(__dirname, '../templates')
+
+program.version(require('../package').version, '-v, --version')
+    .usage('<command> [options]')
+
+program
+    .command('init <project>')
+    .description('init a new project')
+    .action( (project) => {
+        const grep = dir => {
+            files = fs.readdirSync(dir)
+            files.forEach(file => {
+                const filePath = path.join(dir, file)
+                const stat = fs.statSync(filePath)
+                if (stat && stat.isDirectory()) {
+                    grep(filePath)
+                } else {
+                    if (/.json$/.test(file)) {
+                        let data = fs.readFileSync(filePath, 'utf-8')
+                        data = data.replace(/<project>/g, project)
+                        fs.writeFileSync(filePath, data, 'utf8')
+                    }
+                    console.log(chalk.blue(`create ${file}`))
+                }
+            })
+        };
+
+        const dest = path.resolve(project)
+        if (fs.pathExistsSync(dest)) {
+            logger.error(`dest directory ${project} is not empty`)
+            return
+        }
+        fs.ensureDirSync(dest)
+        fs.copySync(TEMPLATE_DIR, dest)
+        grep(dest)
+        logger.log('\n')
+        logger.log(`Successfully created ${chalk.green(project)}`)
+        logger.log(`Get started with the following commands:\n`)
+        logger.log(`$ cd ${chalk.green(project)}`)
+        logger.log(`$ npm install`)
+        logger.log('\n')
+    })
+
+program.on('command:*', function () {
+    console.error(chalk.red('Invalid command: %s \nSee --help for a list of available commands.'), program.args.join(' '))
+    process.exit(1)
+})
+
+program.parse(process.argv)
+
+
