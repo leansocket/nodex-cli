@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
-const program = require('commander')
-const chalk = require('chalk')
-const path = require('path')
-const logger = require('../lib/logger')
-const fs = require('fs-extra')
-const TEMPLATE_DIR = path.join(__dirname, '../templates')
+const program = require('commander');
+const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs-extra');
+const git = require('nodegit');
+const logger = require('../lib/logger');
+
+const TEMPLATE_REPO = 'https://github.com/leansocket/nodex-0.git';
 
 program
     .version(require('../package').version, '-v, --version')
@@ -14,7 +16,7 @@ program
 program
     .command('init <project>')
     .description('init a new project')
-    .action((project) => {
+    .action(async (project) => {
         const grep = dir => {
             files = fs.readdirSync(dir)
             files.forEach(file => {
@@ -41,16 +43,16 @@ program
         }
 
         fs.ensureDirSync(dest)
-        fs.copySync(TEMPLATE_DIR, dest)
+        await git.Clone(TEMPLATE_REPO, dest);
+
         grep(dest)
 
-        logger.log('\n')
-        logger.log(`Successfully created ${chalk.green(project)}`)
-        logger.log(`Get started with the following commands:\n`)
-        logger.log(`$ cd ${chalk.green(project)}`)
-        spawn.sync('cd', [project])
-        logger.log(`$ npm update --save`)
-        logger.log('\n')
+        logger.log('\n');
+        logger.log(`Successfully created ${chalk.green(project)}`);
+        logger.log(`Get started with the following commands:\n`);
+        logger.log(`$ cd ${chalk.green(project)}`);
+        logger.log(`$ npm install`);
+        logger.log('\n');
     })
 
 program.on('command:*', function () {
