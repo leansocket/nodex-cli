@@ -4,7 +4,8 @@ const program = require('commander');
 const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs-extra');
-const git = require('nodegit');
+const simpleGit = require('simple-git/promise');
+const git = simpleGit();
 const logger = require('../lib/logger');
 
 const TEMPLATE_REPO = 'https://github.com/leansocket/nodex-0.git';
@@ -17,8 +18,9 @@ program
     .command('init <project>')
     .description('init a new project')
     .action(async (project) => {
+        const templateName = TEMPLATE_REPO.match(/^.+\/(.+)\.git$/)[1]
         const grep = dir => {
-            files = fs.readdirSync(dir)
+            const files = fs.readdirSync(dir)
             files.forEach(file => {
                 const filePath = path.join(dir, file)
                 const stat = fs.statSync(filePath)
@@ -28,7 +30,7 @@ program
                 else {
                     if (/.json$/.test(file)) {
                         let data = fs.readFileSync(filePath, 'utf-8')
-                        data = data.replace(/<project>/g, project)
+                        data = data.replace(new RegExp(templateName, 'g'), project)
                         fs.writeFileSync(filePath, data, 'utf8')
                     }
                     console.log(chalk.blue(`create ${file}`))
@@ -43,7 +45,7 @@ program
         }
 
         fs.ensureDirSync(dest)
-        await git.Clone(TEMPLATE_REPO, dest);
+        await git.silent(true).clone(TEMPLATE_REPO, dest)
 
         grep(dest)
 
