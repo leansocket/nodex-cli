@@ -1,6 +1,6 @@
 {
   "name": "nodex-cli",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Nodex-libs command line.",
   "main": "bin/nodex",
   "bin": {
