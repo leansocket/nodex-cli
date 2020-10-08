@@ -12,6 +12,7 @@
     "compressing": "^1.5.1",
     "fs-extra": "^9.0.1",
     "inquirer": "^7.3.3",
+    "nodex-libs": "^2.1.6",
     "string.prototype.padstart": "^3.1.0",
     "wget-improved": "^3.2.1"
   },

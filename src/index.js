@@ -10,16 +10,18 @@ program.version(version);
 
 const mapActions = {
   init: {
-    alias: "i",
-    desc: "init a project!",
+    desc: "init a project.",
     examples: [`${cmd} init <projectName>`],
   },
+  start: {
+    desc: 'start a project.',
+    examples: [`${cmd} start <projectPath>`]
+  }
 };
 
 Object.keys(mapActions).forEach((key) => {
   program
     .command(key)
-    .alias(mapActions[key].alias)
     .description(mapActions[key].desc)
     .action(() =>
       require(path.resolve(__dirname, `./actions/${key}`))(
