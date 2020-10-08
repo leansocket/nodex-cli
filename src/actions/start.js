@@ -20,20 +20,16 @@ const loadArgs = function (basePath) {
 }
 
 const loadPath = async function(targetPath, args, module = {}) {
-  if (!fs.pathExistsSync(targetPath)) {
-    return module
-  }
-
-  if(fs.statSync(targetPath).isDirectory()) {
-    for(let childPath of fs.readdirSync(targetPath)){
+  if((await fs.pathExists(targetPath)) && (await fs.stat(targetPath)).isDirectory()) {
+    for(let childPath of (await fs.readdir(targetPath))){
       const childPathBaseName = path.basename(path.join(targetPath, childPath.replace('index.js', '')), '.js')
       const targetPathBaseName = path.basename(targetPath)
       if (childPathBaseName !== targetPathBaseName) {
         module[targetPathBaseName] = module[targetPathBaseName] || {}
         module[targetPathBaseName][childPathBaseName] = module[targetPathBaseName][childPathBaseName] || {}
-        Object.assign(module[targetPathBaseName], loadPath(path.join(targetPath, childPath), args[targetPathBaseName] ,module[targetPathBaseName][childPathBaseName]))
+        Object.assign(module[targetPathBaseName], await loadPath(path.join(targetPath, childPath), args[targetPathBaseName] ,module[targetPathBaseName][childPathBaseName]))
       } else {
-        module[childPathBaseName] = loadPath(path.join(targetPath, childPath), args[targetPathBaseName], module[targetPathBaseName])
+        module[childPathBaseName] = await loadPath(path.join(targetPath, childPath), args[targetPathBaseName], module[targetPathBaseName])
       }
     }
     return module
@@ -47,8 +43,9 @@ const loadPath = async function(targetPath, args, module = {}) {
   const nModule = require(targetPath)
   Object.assign(module, nModule)
 
-  nModule.init && (await nModule.init(args[basename]))
-
+  if (nModule.init) {
+   await nModule.init(args[basename])
+  }
   return module
 }
 
@@ -64,5 +61,5 @@ module.exports = async (cwd = '.') => {
   nodex.runtime.logic = logic
   const serv = await loadPath(path.join(cwd, 'src', 'serv'), args)
   nodex.runtime.serv = serv
-  await nodex.runtime.serv.start(nodex.runtime.args.serv)
+  nodex.runtime.serv.start(nodex.runtime.args.serv)
 }
