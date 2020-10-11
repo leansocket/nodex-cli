@@ -8,21 +8,29 @@ class Runtime {
 
   constructor(cwd) {
     this.cwd = cwd
+    this.appInfo = this.getAppInfo(cwd)
     this.args = this.loadArgs(cwd)
+  }
+
+  getAppInfo(basePath) {
+    const packagePath = path.join(basePath, 'package.json')
+
+    if (!fs.existsSync(packagePath)) {
+      throw new Error(`The package.json file '${packagePath}' is not found.`)
+    }
+
+    return require(packagePath)
   }
 
   loadArgs(basePath) {
     const env = process.env.NODE_ENV || 'prod'
-    const argsPath = path.join(basePath, 'data', `args-${env}.json`);;
+    const argsPath = path.join(basePath, 'data', `args-${env}.json`)
   
-    if (fs.existsSync(argsPath)) {
-        return require(argsPath);
+    if (!fs.existsSync(argsPath)) {
+      throw new Error(`The args file '${argsPath}' is not found.`)
     }
-    else {
-        console.log(`ignored args file: '${argsPath}' because it is not found.`);
-    }
-  
-    return null;
+
+    return require(argsPath)
   }
 
   async loadPath(prop, targetPath) {
@@ -74,8 +82,9 @@ module.exports = async (cwd = '.') => {
     value: new Runtime(cwd)
   })
 
+  nodex.libs.log.init(nodex.runtime.appInfo.name)
+
   await nodex.runtime.loadPath('data', 'src/data')
   await nodex.runtime.loadPath('logic', 'src/logic')
   await nodex.runtime.loadPath('serv', 'src/serv')
-  nodex.runtime.serv.start(nodex.runtime.args.serv)
 }
