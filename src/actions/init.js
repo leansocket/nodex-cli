@@ -5,6 +5,7 @@ const path = require("path");
 const wget = require("wget-improved");
 const compressing = require("compressing");
 const logger = require("../../lib/logger");
+const ProgressBar = require('../../lib/ProgressBar');
 const chalk = require("chalk");
 
 const NODEX_TEMPLATE =
@@ -26,8 +27,13 @@ const createProject = async (projectName) => {
     }
   }
   await fs.remove(dest);
+  const pb = new ProgressBar('Progress', 30)
+  pb.render({ completed: 0, total: 100 })
   const downloadDest = path.join(".", "master.zip");
   const download = wget.download(NODEX_TEMPLATE, downloadDest);
+  download.on('progress', function(num) {
+    pb.render({ completed: num * 100, total: 100 })
+  })
   download.on("end", async function (output) {
     await compressing.zip.uncompress(downloadDest, path.resolve("."));
     await fs.remove(downloadDest);
