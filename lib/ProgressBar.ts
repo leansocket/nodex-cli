@@ -1,8 +1,8 @@
 'use strict'
 
-const slog = require('single-line-log2').stdout;
+import { slog } from 'single-line-log2';
 
-function ProgressBar(description, barLength){
+export default function ProgressBar(description, barLength){
   
   // 两个基本参数(属性)
   this.description = description || 'Progress';       // 命令行开头的文字信息
@@ -10,8 +10,8 @@ function ProgressBar(description, barLength){
  
   // 刷新进度条图案、文字的方法
   this.render = function (opts){
-    let percent = (opts.completed / opts.total).toFixed(4);    // 计算进度(子任务的 完成数 除以 总数)
-    let cellNum = Math.floor(percent * this.length);             // 计算需要多少个 █ 符号来拼凑图案
+    const percent = (opts.completed / opts.total).toFixed(4);    // 计算进度(子任务的 完成数 除以 总数)
+    const cellNum = Math.floor(Number(percent) * this.length);             // 计算需要多少个 █ 符号来拼凑图案
  
     // 拼接黑色条
     let cell = '';
@@ -26,12 +26,9 @@ function ProgressBar(description, barLength){
     }
  
     // 拼接最终文本
-    const cmdText = this.description + ': ' + (100 * percent).toFixed(2) + '% ' + cell + empty + ' ' + opts.completed + '/' + opts.total;
+    const cmdText = this.description + ': ' + (100 * Number(percent)).toFixed(2) + '% ' + cell + empty + ' ' + opts.completed + '/' + opts.total;
     
     // 在单行输出文本
     slog(cmdText);
   };
 }
-
- // 模块导出
-module.exports = ProgressBar;

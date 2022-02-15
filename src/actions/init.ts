@@ -1,12 +1,13 @@
 "use strict";
-const fs = require("fs-extra");
-const inquirer = require("inquirer");
-const path = require("path");
-const wget = require("wget-improved");
-const compressing = require("compressing");
-const logger = require("../../lib/logger");
-const ProgressBar = require('../../lib/ProgressBar');
-const chalk = require("chalk");
+
+import fs from "fs-extra";
+import inquirer from "inquirer";
+import path from "path";
+import wget from "wget-improved";
+import compressing from "compressing";
+import * as logger from "../../lib/logger";
+import ProgressBar from '../../lib/ProgressBar';
+import chalk from "chalk";
 
 const NODEX_TEMPLATE =
   "https://github.com/leansocket/nodex-0/archive/master.zip";
@@ -50,6 +51,6 @@ const createProject = async (projectName) => {
   return dest;
 };
 
-module.exports = async (projectName) => {
+export default async (projectName) => {
   const dest = await createProject(projectName);
 };

@@ -1,0 +1,38 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2015",
+      "lib": [ "es2015"],
+      "outDir": "dist",
+      "charset": "utf8",
+      "declaration": true,
+      "strict": true,
+      "noImplicitAny": false,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,      
+      "allowJs": true,
+      "pretty": true,
+      "noEmitOnError": false,
+      "noUnusedLocals": true,
+      "noUnusedParameters": false,
+      "allowUnreachableCode": false,
+      "allowUnusedLabels": false,
+      "strictPropertyInitialization": false,
+      "strictNullChecks": false,
+      "noFallthroughCasesInSwitch": true,
+      "skipLibCheck": true,
+      "skipDefaultLibCheck": true,
+      "inlineSourceMap": true,
+      "importHelpers": false,
+      "esModuleInterop": true,
+      "resolveJsonModule": true
+  },
+  "include": [
+      "src/**/*.ts",
+      "src/**/*.js",
+  ],
+  "exclude": [
+      "node_modules"
+  ]
+}

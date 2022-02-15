@@ -1,9 +1,9 @@
 "use strict";
 
-const { program } = require("commander");
-const { version, bin } = require("../package.json");
-const path = require("path");
-const chalk = require("chalk");
+import { program } from "commander";
+import { version, bin } from "../package.json";
+import path from "path";
+import chalk from "chalk";
 
 const [cmd] = Object.keys(bin);
 program.version(version);
