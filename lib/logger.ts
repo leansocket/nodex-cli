@@ -1,6 +1,6 @@
-const chalk = require("chalk");
-const readline = require("readline");
-const padStart = require("string.prototype.padstart");
+import chalk from "chalk";
+import readline from "readline";
+import padStart from "string.prototype.padstart";
 
 const format = (label, msg) => {
   return msg
@@ -15,23 +15,23 @@ const format = (label, msg) => {
 
 const chalkTag = (msg) => chalk.bgBlackBright.white.dim(` ${msg} `);
 
-exports.log = (msg = "", tag = null) => {
+export const log = (msg = "", tag = null) => {
   tag ? console.log(format(chalkTag(tag), msg)) : console.log(msg);
 };
 
-exports.info = (msg = "", tag = null) => {
+export const info = (msg = "", tag = null) => {
   console.log(
     format(chalk.bgBlue.black(" INFO ") + (tag ? chalkTag(tag) : ""), msg)
   );
 };
 
-exports.done = (msg = "", tag = null) => {
+export const done = (msg = "", tag = null) => {
   console.log(
     format(chalk.bgGreen.black(" DONE ") + (tag ? chalkTag(tag) : ""), msg)
   );
 };
 
-exports.warn = (msg = "", tag = null) => {
+export const warn = (msg = "", tag = null) => {
   console.warn(
     format(
       chalk.bgYellow.black(" WARN ") + (tag ? chalkTag(tag) : ""),
@@ -40,7 +40,7 @@ exports.warn = (msg = "", tag = null) => {
   );
 };
 
-exports.error = (msg = "", tag = null) => {
+export const error = (msg: string | Error = "", tag = null) => {
   console.error(
     format(chalk.bgRed(" ERROR ") + (tag ? chalkTag(tag) : ""), chalk.red(msg))
   );
@@ -49,7 +49,7 @@ exports.error = (msg = "", tag = null) => {
   }
 };
 
-exports.clearConsole = (title) => {
+export const clearConsole = (title) => {
   if (process.stdout.isTTY) {
     const blank = "\n".repeat(process.stdout.rows);
     console.log(blank);

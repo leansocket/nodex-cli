@@ -1,18 +1,30 @@
 'use strict';
 
-const fs = require('fs-extra');
-const path = require('path');
-const libs = require('nodex-libs');
+import fs from 'fs-extra';
+import path from 'path';
+import * as libs from 'nodex-libs';
 
 class Runtime {
 
-  constructor(cwd) {
-    this.cwd = cwd
-    this.appInfo = this.getAppInfo(cwd)
-    this.args = this.loadArgs(cwd)
+  private _cwd: string
+
+  private _appInfo
+
+  private _args
+
+  get args() { return this._args }
+
+  get appInfo() { return this._appInfo }
+
+  get cwd() { return this._cwd }
+
+  constructor(cwd: string) {
+    this._cwd = cwd
+    this._appInfo = this.getAppInfo(cwd)
+    this._args = this.loadArgs(cwd)
   }
 
-  getAppInfo(basePath) {
+  private getAppInfo(basePath) {
     const packagePath = path.join(basePath, 'package.json')
 
     if (!fs.existsSync(packagePath)) {
@@ -22,7 +34,7 @@ class Runtime {
     return require(packagePath)
   }
 
-  loadArgs(basePath) {
+  private loadArgs(basePath) {
     const env = process.env.NODE_ENV || 'prod'
     const argsPath = path.join(basePath, 'data', `args-${env}.json`)
   
@@ -33,13 +45,13 @@ class Runtime {
     return require(argsPath)
   }
 
-  async loadPath(prop, targetPath) {
+  public async loadPath(prop, targetPath) {
     targetPath = path.join(this.cwd, targetPath)
     this[prop] = await this._loadPath(targetPath, this.args)
     return this
   }
 
-  async _loadPath(targetPath, args, module = {}) {
+  private async _loadPath(targetPath, args, module = {}) {
     if((await fs.pathExists(targetPath)) && (await fs.stat(targetPath)).isDirectory()) {
       for(let childPath of (await fs.readdir(targetPath))){
         const childPathBaseName = path.basename(path.join(targetPath, childPath.replace('index.js', '')), '.js')
@@ -72,19 +84,18 @@ class Runtime {
 
 module.exports = async (cwd = '.') => {
   cwd = path.resolve(cwd)
-  global.nodex = Object.create(null)
-  Object.defineProperty(nodex, 'libs', {
+  global['nodex'] = Object.create(null)
+  Object.defineProperty(global['nodex'], 'libs', {
     writable: false,
     value: libs
   })
-  Object.defineProperty(nodex, 'runtime', {
+  Object.defineProperty(global['nodex'], 'runtime', {
     writable: false,
     value: new Runtime(cwd)
   })
 
-  nodex.libs.log.init(nodex.runtime.appInfo.name)
-
-  await nodex.runtime.loadPath('data', 'src/data')
-  await nodex.runtime.loadPath('logic', 'src/logic')
-  await nodex.runtime.loadPath('serv', 'src/serv')
+  await global['nodex'].runtime.loadPath('data', 'src/data')
+  await global['nodex'].runtime.loadPath('logic', 'src/logic')
+  await global['nodex'].runtime.loadPath('serv', 'src/serv')
 }
+
